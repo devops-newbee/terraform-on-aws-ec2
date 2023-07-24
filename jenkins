@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+    
+    environment {
+        TF_VAR_region = "us-west-2" // Set any Terraform variables here if needed
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout your Terraform code from version control (e.g., Git)
+                git 'https://github.com/your/repo.git'
+            }
+        }
+        
+        stage('Terraform Init') {
+            steps {
+                // Initialize Terraform (Only needed for the first run or when modules/plugins are updated)
+                sh "terraform init"
+            }
+        }
+        
+        stage('Terraform Plan') {
+            steps {
+                // Perform a Terraform plan to see the changes before applying
+                sh "terraform plan"
+            }
+        }
+        
+        stage('Terraform Apply') {
+            steps {
+                // Apply the Terraform changes
+                sh "terraform apply -auto-approve"
+            }
+        }
+    }
+}
